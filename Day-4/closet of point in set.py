@@ -1,34 +1,53 @@
-def is_counter_clockwise(p1, p2, p3):
-    """Check if the points p1, p2, and p3 are in counter-clockwise order.
-    Uses the cross product of vectors (p2 - p1) and (p3 - p1)."""
-    return (p2[0] - p1[0]) * (p3[1] - p1[1]) - (p2[1] - p1[1]) * (p3[0] - p1[0]) > 0
+'''Write a program to find the closest pair of points in a given set using the brute force approach. Analyze the time complexity of your implementation.
+Define a function to calculate the Euclidean distance between two points. Implement a function to find the closest pair of points using the brute force
+method. Test your program with a sample set of points and verify the correctness of your results. Analyze the time complexity of your implementation. 
+Write a brute-force algorithm to solve the convex hull problem for the following set S of points? P1 (10,0)P2 (11,5)P3 (5, 3)P4 (9, 3.5)P5 (15, 3)
+P6 (12.5, 7)P7 (6, 6.5)P8 (7.5, 4.5).How do you modify your brute force algorithm to handle multiple points that are lying on the sameline?'''
+import math
+# Closest pair using brute force
+def closest_pair(points):
+    min_dist = float('inf')
+    pair = None
+    for i in range(len(points)):
+        for j in range(i + 1, len(points)):
+            dist = math.dist(points[i], points[j])
+            if dist < min_dist:
+                min_dist = dist
+                pair = (points[i], points[j])
+    return pair, min_dist
 
-def brute_force_convex_hull(points):
-    """Finds the convex hull using the brute force approach."""
-    n = len(points)
-    hull = set()
-    for i in range(n):
-        for j in range(n):
-            if i == j:
-                continue
-            p1, p2 = points[i], points[j]
-            valid_edge = True
-            for k in range(n):
-                if k == i or k == j:
-                    continue
-                p3 = points[k]
-                # If point p3 is on the right side of the line segment p1 -> p2, it's not a hull edge
-                if not is_counter_clockwise(p1, p2, p3):
-                    valid_edge = False
-                    break
-            if valid_edge:
-                hull.add(p1)
-                hull.add(p2)
-    hull = sorted(hull, key=lambda point: (point[0], point[1]))
-    return hull
+# Convex hull using brute force
+def convex_hull(points):
+    hull = []
+    for i in range(len(points)):
+        for j in range(i + 1, len(points)):
+            left = right = False
+            for k in range(len(points)):
+                if k != i and k != j:
+                    # Calculate orientation
+                    cross = (points[j][1] - points[i][1]) * (points[k][0] - points[j][0]) - \
+                            (points[j][0] - points[i][0]) * (points[k][1] - points[j][1])
+                    if cross > 0: left = True
+                    elif cross < 0: right = True
+                if left and right: break
+            # Add points to hull if they form a boundary
+            if not (left and right):
+                if points[i] not in hull: hull.append(points[i])
+                if points[j] not in hull: hull.append(points[j])
+    return sorted(hull)
 
-points = [(1, 1), (4, 6), (8, 1), (0, 0), (3, 3)]
-convex_hull = brute_force_convex_hull(points)
-print("Convex Hull:", convex_hull)
+# Sample points
+points = [(10, 0), (11, 5), (5, 3), (9, 3.5), (15, 3), (12.5, 7), (6, 6.5), (7.5, 4.5)]
 
-Output:Convex Hull: [(0, 0), (4, 6), (8, 1)]
+# Results
+pair, dist = closest_pair(points)
+hull = convex_hull(points)
+
+print("Closest pair:", pair)
+print("Minimum distance:", dist)
+print("Convex Hull points:", hull)
+
+Output:
+Closest pair: ((9, 3.5), (7.5, 4.5))
+Minimum distance: 1.8027756377319946
+Convex Hull points: [(5, 3), (6, 6.5), (10, 0), (12.5, 7), (15, 3)]

@@ -1,5 +1,5 @@
 
-def checker(num1, num2):
+def calculator(num1, num2):
     ans=[0,0]
     for i in num1:
         if i in num2:
@@ -10,5 +10,5 @@ def checker(num1, num2):
     return ans
 num1=[1,2,2,3,4]
 num2=[2,3,4,5,6]
-print(checker(num1,num2))
+print(calculator(num1,num2))
 

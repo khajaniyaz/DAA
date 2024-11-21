@@ -25,6 +25,4 @@ selection, total = knapsack(weights, values, capacity)
 print("Optimal Selection:", selection)
 print("Total Value:", total)
 
-Output:
-Optimal Selection: [1, 2]
-Total Value: 8
+

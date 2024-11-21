@@ -1,3 +1,4 @@
+from itertools import permutations
 def tsp(cities, distances):
     min_cost = float('inf')
     for perm in permutations(cities):
